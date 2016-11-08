@@ -1,0 +1,18 @@
+<extend name="Public:header"/>
+<block name="content">
+    <form action="{:U()}" method="post" class="form">
+        <div class="form-group">
+            <label>分类名</label>
+            <input type="text" class="form-control" name="name"/>
+        </div>
+        <div class="form-group">
+            <label>分类描述</label>
+            <input type="text" class="form-control" name="desc"/>
+        </div>
+        <input type="submit" value="添加" class="btn btn-success"/>
+    </form>
+</block>
+<block name="bread">
+    <li><a href="{:U('Index/index')}">首页</a></li>
+    <li class="active">添加分类</li>
+</block>

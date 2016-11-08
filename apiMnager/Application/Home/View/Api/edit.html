@@ -1,0 +1,277 @@
+<extend name="Public:header"/>
+<block name="menu">
+    <li>
+        <a href="{:U('Index/index')}">首页</a>
+    </li>
+
+    <if condition="$isSuper egt 1">
+        <li>
+            <a href="{:U('Api/index',['cid'=>I('get.cid')])}">接口列表</a>
+        </li>
+    </if>
+</block>
+
+<block name="css">
+    <!-- Create a simple CodeMirror instance -->
+    <link rel="stylesheet" href="__PUBLIC__/js/CodeMirror/lib/codemirror.css">
+    <link rel="stylesheet" href="__PUBLIC__/js/CodeMirror/theme/monokai.css">
+    <script src="__PUBLIC__/js/CodeMirror/lib/codemirror.js"></script>
+
+
+    <script src="__PUBLIC__/js/CodeMirror/mode/javascript/javascript.js"></script>
+
+</block>
+
+<block name="content">
+    <form action="{:U('edit',['id'=>$info['id']])}" method="post" class="form" id="apiForm">
+        <div class="form-group has-error">
+            <label>接口名称</label>
+            <input type="text" class="form-control" name="name" placeholder="请输入接口名称" value="{$info.name}"/>
+        </div>
+        <div class="form-group">
+            <label>内部编号（为空则为ID）</label>
+            <input type="text" class="form-control" name="aid" placeholder="请输入内部编号" value="{$info.aid}"/>
+        </div>
+
+        <div class="form-group">
+            <label>请求地址</label>
+            <div class="input-group has-error">
+                <input type="text" name="url" class="form-control" placeholder="请输入请求地址"  value="{$info.url}"/>
+                <div class="input-group-btn" style="min-width: 100px">
+                    <select name="type" class="form-control" >
+                        <option value="1" {:$info['type'] == 1?'selected="selected"':''}>POST</option>
+                        <option value="2" {:$info['type'] == 2?'selected="selected"':''}>GET</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>接口描述</label>
+            <textarea name="desc" class="form-control" cols="30" rows="3" placeholder="请输入接口功能描述">{$info.desc}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>提交参数</label>
+            <div class="input-group ">
+                <button type="button" class="btn btn-success" id="addParam">添加参数</button>
+            </div>
+            <hr>
+            <script>
+                $('#addParam').click(function () {
+                    var _html = $('#paramTbody td:first').parent();
+                    $('#paramTbody').append('<tr>'+_html.html()+'</tr>');
+                });
+            </script>
+
+            <table class="table table-condensed table-hover table-responsive table-bordered">
+                <thead>
+                <tr>
+                    <td>参数名</td>
+                    <td>字段类型</td>
+                    <td>是否必填</td>
+                    <td>默认值</td>
+                    <td>说明</td>
+                    <td>操作</td>
+                </tr>
+                </thead>
+                <tbody id="paramTbody">
+                {~$linJson = json_decode($info['params'])}
+                <if condition="empty($linJson)">
+                    <tr>
+                        <td>
+                            <div class="has-error">
+                                <input type="text" name="paramName[]" class="form-control" placeholder="请输入参数名" />
+                            </div>
+                        </td>
+                        <td>
+                            <select name="paramType[]" class="form-control"/>
+                            <option >String</option>
+                            <option >Int</option>
+                            <option >Bool</option>
+                            <option >Number</option>
+                            <option >Float</option>
+                            <option >Other</option>
+                            </select>
+                        </td>
+                        <td><select name="paramMust[]" class="form-control"/>
+                            <option value="1" >必填</option>
+                            <option value="0" >可选</option>
+                            </select></td>
+                        <td><input type="text" name="paramDefault[]" class="form-control" placeholder="请输入默认值" /></td>
+                        <td>
+                            <div class="has-error">
+                                <input type="text" name="paramText[]" class="form-control" placeholder="请输入参数说明" />
+                            </div>
+                        </td>
+                        <td>
+                            <a href="javascript:;" class="btn btn-danger btn-sm" onclick="$(this).parent().parent().remove();">删除</a>
+                        </td>
+                    </tr>
+                </if>
+                <volist name="linJson" id="lin">
+                    <tr>
+                        <td>
+                            <div class="has-error">
+                                <input type="text" name="paramName[]" class="form-control" placeholder="请输入参数名" value="{$lin->paramName}"/>
+                            </div>
+                        </td>
+                        <td>
+                            <select name="paramType[]" class="form-control"/>
+                            <option {:$lin->paramType =='String'?'selected="selected"':''}>String</option>
+                            <option {:$lin->paramType =='Int'?'selected="selected"':''}>Int</option>
+                            <option {:$lin->paramType =='Bool'?'selected="selected"':''}>Bool</option>
+                            <option {:$lin->paramType =='Number'?'selected="selected"':''}>Number</option>
+                            <option {:$lin->paramType =='Float'?'selected="selected"':''}>Float</option>
+                            <option {:$lin->paramType =='Other'?'selected="selected"':''}>Other</option>
+                            </select>
+                        </td>
+                        <td><select name="paramMust[]" class="form-control"/>
+                            <option value="1" {:$lin->paramMust==1?'selected="selected"':''}>必填</option>
+                            <option value="0" {:$lin->paramMust==0?'selected="selected"':''}>可选</option>
+                            </select></td>
+                        <td><input type="text" name="paramDefault[]" class="form-control" placeholder="请输入默认值" value="{$lin->paramDefault}"/></td>
+                        <td>
+                            <div class="has-error">
+                                <input type="text" name="paramText[]" class="form-control" placeholder="请输入参数说明" value="{$lin->paramText}"/>
+                            </div>
+                        </td>
+                        <td>
+                            <a href="javascript:;" class="btn btn-danger btn-sm" onclick="$(this).parent().parent().remove();">删除</a>
+                        </td>
+                    </tr>
+                </volist>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group">
+            <label>返回数据(JSON)</label>
+            <div class="input-group">
+                <button type="button" class="btn btn-success " id="returnParam">添加参数</button>
+                <select name="return_type" class="form-control">
+                    <option value="1" {:$info['return_type']==1?'selected="selected"':''}>JSON</option>
+                    <option value="2" {:$info['return_type']==2?'selected="selected"':''}>XML</option>
+                </select>
+            </div>
+            <hr>
+
+            <script>
+                $('#returnParam').click(function () {
+                    var _html = $('#returnTbody td:first').parent();
+                    $('#returnTbody').append('<tr>'+_html.html()+'</tr>');
+                });
+            </script>
+            <table class="table table-condensed table-hover table-responsive table-bordered">
+                <thead>
+                <tr>
+                    <td>字段名</td>
+                    <td>字段类型</td>
+                    <td>说明</td>
+                    <td>操作</td>
+                </tr>
+                </thead>
+                <tbody id="returnTbody">
+                {~$linJson = json_decode($info['returns'])}
+                <if condition="empty($linJson)">
+                    <tr>
+                        <td><input type="text" name="returnName[]" class="form-control" placeholder="请输入返回字段名" /></td>
+                        <td>
+                            <select name="returnType[]" class="form-control"/>
+                            <option>String</option>
+                            <option>Int</option>
+                            <option>Bool</option>
+                            <option>Number</option>
+                            <option>Float</option>
+                            <option>Other</option>
+                            </select>
+                        </td>
+                        <td><input type="text" name="returnText[]" class="form-control" placeholder="请输入返回字段说明" /></td>
+                        <td>
+                            <a href="javascript:;" class="btn btn-danger btn-sm" onclick="$(this).parent().parent().remove();">删除</a>
+                        </td>
+                    </tr>
+                </if>
+                <volist name="linJson" id="lin">
+                    <tr>
+                        <td><input type="text" name="returnName[]" class="form-control" placeholder="请输入返回字段名" value="{$lin->returnName}"/></td>
+                        <td>
+                            <select name="returnType[]" class="form-control"/>
+                            <option {:$lin->paramType =='String'?'selected="selected"':''}>String</option>
+                            <option {:$lin->paramType =='Int'?'selected="selected"':''}>Int</option>
+                            <option {:$lin->paramType =='Bool'?'selected="selected"':''}>Bool</option>
+                            <option {:$lin->paramType =='Number'?'selected="selected"':''}>Number</option>
+                            <option {:$lin->paramType =='Float'?'selected="selected"':''}>Float</option>
+                            <option {:$lin->paramType =='Other'?'selected="selected"':''}>Other</option>
+                            </select>
+                        </td>
+                        <td><input type="text" name="returnText[]" class="form-control" placeholder="请输入返回字段说明" value="{$lin->returnText}"/></td>
+                        <td>
+                            <a href="javascript:;" class="btn btn-danger btn-sm" onclick="$(this).parent().parent().remove();">删除</a>
+                        </td>
+                    </tr>
+                </volist>
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-group">
+            <label>接口示例</label>
+            <textarea name="demo" id="demo" class="form-control" cols="30" rows="10" placeholder="请输入接口请求示例 通常是URL地址+POST数据">{$info.demo}</textarea>
+        </div>
+        <div class="form-group">
+            <label>返回示例</label>
+            <textarea name="return_demo" id="return_demo" class="form-control" cols="30" rows="10" placeholder="请输入返回数据示例 通常是Json数据">{$info.return_demo}</textarea>
+        </div>
+        <div class="form-group">
+            <label>是否只有登录可见</label>
+            <div class="input-group">
+                <label><input type="radio" class="radio-inline" name="is_login" value="0" {:$info['is_login'] == 0?'checked="checked"':''}>否</label>
+            </div>
+            <div class="input-group">
+                <label><input type="radio" class="radio-inline" name="is_login" value="1" {:$info['is_login'] == 1?'checked="checked"':''}>是</label>
+            </div>
+        </div>
+        <input type="hidden" name="id" value="{:I('get.id')}" />
+        <input type="submit" value="编辑" class="btn btn-success"/>
+    </form>
+    <script type="text/javascript">
+        $('#apiForm').submit(function () {
+            // 保存
+            $('#return_demo').val(return_demo.getValue());
+            $('#demo').val(demo.getValue());
+
+            var _data = $(this).serialize();
+            $.post($(this).attr('action'),_data,function (data) {
+                if(data.status == 1){
+                    location.href = data.url;
+                }else{
+                    layer.alert(data.msg);
+                }
+            });
+
+
+            return false;
+        });
+    </script>
+    <script>
+            var myTextarea = document.getElementById('return_demo');
+            var return_demo = CodeMirror.fromTextArea(myTextarea, {
+                lineNumbers: true,
+                styleActiveLine: true,
+                matchBrackets: true,
+                theme:'monokai'
+            });
+            var demo = CodeMirror.fromTextArea(document.getElementById('demo'), {
+                lineNumbers: true,
+                styleActiveLine: true,
+                matchBrackets: true,
+                theme:'monokai'
+            });
+    </script>
+</block>
+<block name="bread">
+    <li><a href="{:U('Index/index')}">首页</a></li>
+    <li class="active">添加接口</li>
+</block>

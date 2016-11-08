@@ -1,0 +1,15 @@
+<extend name="Public:header"/>
+<block name="content">
+    <form action="{:U('edit',['id'=>$info['id']])}" method="post" class="form">
+        <div class="form-group">
+            <label>网站标题</label>
+            <input type="text" class="form-control" name="web_title" value="{$info['web_title']}"/>
+        </div>
+        <input type="hidden" name="id" value="{$info.id}">
+        <input type="submit" value="编辑" class="btn btn-success"/>
+    </form>
+</block>
+<block name="bread">
+    <li><a href="{:U('Index/index')}">首页</a></li>
+    <li class="active">系统设置</li>
+</block>

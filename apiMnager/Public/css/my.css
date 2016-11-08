@@ -1,0 +1,64 @@
+* {
+    /*color: #fff;*/
+}
+html{
+    overflow-y: scroll;
+}
+.right {
+    float: right;
+}
+
+.left {
+    float: left;
+}
+
+.menuHeader {
+    width: 250px;
+}
+
+.menu {
+    background: #333;
+    width: 250px;
+    position: fixed;
+    top:0;
+    height: 100%;
+}
+
+.menu .menuHeader .logo {
+    padding: 5px 0;
+    text-align: center;
+}
+
+body {
+    height: 100%;
+    overflow: hidden;
+    margin: 0px;
+    padding: 0px;
+}
+
+.main {
+    width: 100%;
+}
+
+.main .header {
+    height: 70px;
+    line-height: 70px;
+    background: #333;
+    width: 100%;
+    font-size: 14px;
+
+}
+
+.main .header .right {
+    margin-right: 10px;
+}
+
+.breadcrumb {
+    background-color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.right_content {
+    padding: 20px 20px;
+}

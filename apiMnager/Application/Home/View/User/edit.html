@@ -1,0 +1,38 @@
+<extend name="Public:header"/>
+<block name="content">
+    <form action="{:U('edit',['id'=>$info['id']])}" method="post" class="form">
+        <div class="form-group">
+            <label>账号</label>
+            <input type="text" class="form-control" name="username" value="{$info.username}"/>
+        </div>
+        <div class="form-group">
+            <label>密码</label>
+            <input type="password" class="form-control" name="password" placeholder="留空不修改"/>
+        </div>
+        <div class="form-group">
+            <label>姓名</label>
+            <input type="text" class="form-control" name="name" value="{$info.name}"/>
+        </div>
+        <div class="form-group">
+            <label>类型</label>
+            <div class="input-group">
+                <label>
+                    <input type="radio" name="is_super" value="0" {:$info['is_super'] == 0?'checked="checked"':''}>普通用户</label>
+            </div>
+            <div class="input-group">
+                <label>
+                    <input type="radio" name="is_super" value="1" {:$info['is_super'] == 1?'checked="checked"':''}>管理员</label>
+            </div>
+            <div class="input-group">
+                <label>
+                    <input type="radio" name="is_super" value="2" {:$info['is_super'] == 2?'checked="checked"':''}>超级管理员</label>
+            </div>
+        </div>
+        <input type="hidden" name="id" value="{$info.id}">
+        <input type="submit" value="编辑" class="btn btn-success"/>
+    </form>
+</block>
+<block name="bread">
+    <li><a href="{:U('Index/index')}">首页</a></li>
+    <li class="active">编辑用户</li>
+</block>

@@ -1,0 +1,18 @@
+<extend name="Public:header"/>
+<block name="content">
+    <form action="{:U()}" method="post" class="form">
+        <div class="form-group">
+            <label>旧密码</label>
+            <input type="text" class="form-control" name="old_password"/>
+        </div>
+        <div class="form-group">
+            <label>新密码</label>
+            <input type="password" class="form-control" name="password"/>
+        </div>
+        <input type="submit" value="修改" class="btn btn-success"/>
+    </form>
+</block>
+<block name="bread">
+    <li><a href="{:U('Index/index')}">首页</a></li>
+    <li class="active">修改密码</li>
+</block>
