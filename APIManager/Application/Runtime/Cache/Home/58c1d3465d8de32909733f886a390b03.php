@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo ($systemInfo["web_title"]); ?></title>
-
+    <link rel="shortcut icon" href="/favicon.ico" mce_href="/favicon.ico" type="image/x-icon">
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="/Public/js/jquery-1.11.2.min.js"></script>
     <!-- Bootstrap -->
@@ -75,11 +75,23 @@
             <span class="fa arrow"></span>
         </a>
         <ul aria-expanded="true">
-            <?php if(is_array($apiList)): $i = 0; $__LIST__ = $apiList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$api): $mod = ($i % 2 );++$i;?><li>
-                    <a href="#TrueCode_api_<?php echo md5($api['id']);?>">
-                        <?php echo ($api["name"]); ?>
-                    </a>
-                </li><?php endforeach; endif; else: echo "" ;endif; ?>
+            <?php if(is_array($apiList)): $i = 0; $__LIST__ = $apiList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$api): $mod = ($i % 2 );++$i; $apiNum = 0;?>
+                <?php if($api['is_login']): if($isLogin): ++$apiNum;?>
+                        <li>
+                            <a href="#TrueCode_api_<?php echo md5($api['id']);?>">
+                                <?php echo ($api["name"]); ?>
+                            </a>
+                        </li><?php endif; ?>
+                    <?php else: ?>
+                    <?php ++$apiNum;?>
+                    <li>
+                        <a href="#TrueCode_api_<?php echo md5($api['id']);?>">
+                            <?php echo ($api["name"]); ?>
+                        </a>
+                    </li><?php endif; endforeach; endif; else: echo "" ;endif; ?>
+            <?php if($apiNum == 0): ?><li >
+                    <a href="">暂无数据</a>
+                </li><?php endif; ?>
         </ul>
     </li>
 
@@ -120,66 +132,137 @@
         <!--右侧内容-->
         <div class="right_content container">
             
-    <?php if(is_array($apiList)): $i = 0; $__LIST__ = $apiList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$api): $mod = ($i % 2 );++$i;?><div class="panel panel-success" id="TrueCode_api_<?php echo md5($api['id']);?>">
-            <div class="panel-heading">
-                <h3 class="panel-title"><?php echo ($api["name"]); ?></h3>
-                <?php if($isSuper >= 1): ?><a href="<?php echo U('edit',['id'=>$api['id']]);?>" class="btn btn-success" style="float: right;margin-top: -26px;">编辑</a><?php endif; ?>
-            </div>
-            <div class="panel-body">
-                <span class="label label-success"><?php echo $api['type']==1?'POST':'GET';?></span> - <span
-                    class="label label-success"><?php echo ($api["url"]); ?></span>
-                <hr />
-                <p>接口功能：<br/><?php echo ($api["desc"]); ?></p>
-                <hr />
-                <h4>请求参数(urlParams)</h4>
-                <table class="table table-condensed table-hover table-responsive table-bordered">
-                    <thead>
-                        <tr>
-                            <td>参数名</td>
-                            <td>类型</td>
-                            <td>是否必填</td>
-                            <td>默认值</td>
-                            <td>说明</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $linJson = json_decode($api['params']);?>
-                        <?php if(is_array($linJson)): $i = 0; $__LIST__ = $linJson;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$lin): $mod = ($i % 2 );++$i;?><tr <?php echo $lin->paramMust?'class="text-danger"':'';?>>
-                                <td><?php echo ($lin->paramName); ?></td>
-                                <td><?php echo ($lin->paramType); ?></td>
-                                <td><?php echo $lin->paramMust?'必填':'可选';?></td>
-                                <td><?php echo $lin->paramDefault?$lin->paramDefault:'-';?></td>
-                                <td><?php echo ($lin->paramText); ?></td>
-                            </tr><?php endforeach; endif; else: echo "" ;endif; ?>
-                    </tbody>
-                </table>
-                <h4>返回字段(类型：<?php echo $api['return_type']==1?'JSON':'XML';?>)</h4>
-                <table class="table table-condensed table-hover table-responsive table-bordered">
-                    <thead>
-                        <tr>
-                            <td>字段名</td>
-                            <td>字段类型</td>
-                            <td>说明</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $linJson = json_decode($api['returns']);?>
-                        <?php if(is_array($linJson)): $i = 0; $__LIST__ = $linJson;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$lin): $mod = ($i % 2 );++$i;?><tr>
-                                <td><?php echo ($lin->returnName); ?></td>
-                                <td><?php echo ($lin->returnType); ?></td>
-                                <td><?php echo ($lin->returnText); ?></td>
-                            </tr><?php endforeach; endif; else: echo "" ;endif; ?>
-                    </tbody>
-                </table>
-                <h4>接口示例</h4>
-                <pre class="prettyprint linenums"><?php echo ($api["demo"]); ?></pre>
-                <h4>返回示例</h4>
-                <pre class="prettyprint linenums"><?php echo ($api["return_demo"]); ?></pre>
-            </div>
-            <div class="panel-footer">
-                创建时间：<?php echo date('Y-m-d H:i:s',$api['create_time']);?>
-            </div>
-        </div><?php endforeach; endif; else: echo "" ;endif; ?>
+    <?php $apiNum = 0;?>
+    <?php if(is_array($apiList)): $i = 0; $__LIST__ = $apiList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$api): $mod = ($i % 2 );++$i; if($api['is_login']): if($isLogin): ++$apiNum;?>
+                    
+                    <div class="panel panel-success" id="TrueCode_api_<?php echo md5($api['id']);?>">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><?php echo ($api["name"]); ?></h3>
+                            <?php if($isSuper >= 1): ?><a href="<?php echo U('edit',['id'=>$api['id']]);?>" class="btn btn-success" style="float: right;margin-top: -26px;">编辑</a>
+                                <a href="<?php echo U('remove',['id'=>$api['id']]);?>" class="btn btn-danger" style="float: right;margin-top: -26px;margin-right: 10px">删除</a><?php endif; ?>
+                        </div>
+                        <div class="panel-body">
+                            <span class="label label-success"><?php echo $api['type']==1?'POST':'GET';?></span> - <span
+                                class="label label-success"><?php echo ($api["url"]); ?></span>
+                            <hr />
+                            <p>接口功能：<br/><?php echo ($api["desc"]); ?></p>
+                            <hr />
+                            <h4>请求参数(urlParams)</h4>
+                            <table class="table table-condensed table-hover table-responsive table-bordered">
+                                <thead>
+                                <tr>
+                                    <td>参数名</td>
+                                    <td>类型</td>
+                                    <td>是否必填</td>
+                                    <td>默认值</td>
+                                    <td>说明</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php $linJson = json_decode($api['params']);?>
+                                <?php if(is_array($linJson)): $i = 0; $__LIST__ = $linJson;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$lin): $mod = ($i % 2 );++$i;?><tr <?php echo $lin->paramMust?'class="text-danger"':'';?>>
+                                        <td><?php echo ($lin->paramName); ?></td>
+                                        <td><?php echo ($lin->paramType); ?></td>
+                                        <td><?php echo $lin->paramMust?'必填':'可选';?></td>
+                                        <td><?php echo $lin->paramDefault?$lin->paramDefault:'-';?></td>
+                                        <td><?php echo ($lin->paramText); ?></td>
+                                    </tr><?php endforeach; endif; else: echo "" ;endif; ?>
+                                </tbody>
+                            </table>
+                            <h4>返回字段(类型：<?php echo $api['return_type']==1?'JSON':'XML';?>)</h4>
+                            <table class="table table-condensed table-hover table-responsive table-bordered">
+                                <thead>
+                                <tr>
+                                    <td>字段名</td>
+                                    <td>字段类型</td>
+                                    <td>说明</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php $linJson = json_decode($api['returns']);?>
+                                <?php if(is_array($linJson)): $i = 0; $__LIST__ = $linJson;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$lin): $mod = ($i % 2 );++$i;?><tr>
+                                        <td><?php echo ($lin->returnName); ?></td>
+                                        <td><?php echo ($lin->returnType); ?></td>
+                                        <td><?php echo ($lin->returnText); ?></td>
+                                    </tr><?php endforeach; endif; else: echo "" ;endif; ?>
+                                </tbody>
+                            </table>
+                            <h4>接口示例</h4>
+                            <pre class="prettyprint linenums"><?php echo ($api["demo"]); ?></pre>
+                            <h4>返回示例</h4>
+                            <pre class="prettyprint linenums"><?php echo ($api["return_demo"]); ?></pre>
+                        </div>
+                        <div class="panel-footer">
+                            创建时间：<?php echo date('Y-m-d H:i:s',$api['create_time']);?>
+                        </div>
+                    </div><?php endif; ?>
+            <?php else: ?>
+                <?php ++$apiNum;?>
+                
+                <div class="panel panel-success" id="TrueCode_api_<?php echo md5($api['id']);?>">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><?php echo ($api["name"]); ?></h3>
+                        <?php if($isSuper >= 1): ?><a href="<?php echo U('edit',['id'=>$api['id']]);?>" class="btn btn-success" style="float: right;margin-top: -26px;">编辑</a>
+                            <a href="<?php echo U('remove',['id'=>$api['id']]);?>" class="btn btn-danger" style="float: right;margin-top: -26px;margin-right: 10px">删除</a><?php endif; ?>
+                    </div>
+                    <div class="panel-body">
+                        <span class="label label-success"><?php echo $api['type']==1?'POST':'GET';?></span> - <span
+                            class="label label-success"><?php echo ($api["url"]); ?></span>
+                        <hr />
+                        <p>接口功能：<br/><?php echo ($api["desc"]); ?></p>
+                        <hr />
+                        <h4>请求参数(urlParams)</h4>
+                        <table class="table table-condensed table-hover table-responsive table-bordered">
+                            <thead>
+                            <tr>
+                                <td>参数名</td>
+                                <td>类型</td>
+                                <td>是否必填</td>
+                                <td>默认值</td>
+                                <td>说明</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php $linJson = json_decode($api['params']);?>
+                            <?php if(is_array($linJson)): $i = 0; $__LIST__ = $linJson;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$lin): $mod = ($i % 2 );++$i;?><tr <?php echo $lin->paramMust?'class="text-danger"':'';?>>
+                                    <td><?php echo ($lin->paramName); ?></td>
+                                    <td><?php echo ($lin->paramType); ?></td>
+                                    <td><?php echo $lin->paramMust?'必填':'可选';?></td>
+                                    <td><?php echo $lin->paramDefault?$lin->paramDefault:'-';?></td>
+                                    <td><?php echo ($lin->paramText); ?></td>
+                                </tr><?php endforeach; endif; else: echo "" ;endif; ?>
+                            </tbody>
+                        </table>
+                        <h4>返回字段(类型：<?php echo $api['return_type']==1?'JSON':'XML';?>)</h4>
+                        <table class="table table-condensed table-hover table-responsive table-bordered">
+                            <thead>
+                            <tr>
+                                <td>字段名</td>
+                                <td>字段类型</td>
+                                <td>说明</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php $linJson = json_decode($api['returns']);?>
+                            <?php if(is_array($linJson)): $i = 0; $__LIST__ = $linJson;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$lin): $mod = ($i % 2 );++$i;?><tr>
+                                    <td><?php echo ($lin->returnName); ?></td>
+                                    <td><?php echo ($lin->returnType); ?></td>
+                                    <td><?php echo ($lin->returnText); ?></td>
+                                </tr><?php endforeach; endif; else: echo "" ;endif; ?>
+                            </tbody>
+                        </table>
+                        <h4>接口示例</h4>
+                        <pre class="prettyprint linenums"><?php echo ($api["demo"]); ?></pre>
+                        <h4>返回示例</h4>
+                        <pre class="prettyprint linenums"><?php echo ($api["return_demo"]); ?></pre>
+                    </div>
+                    <div class="panel-footer">
+                        创建时间：<?php echo date('Y-m-d H:i:s',$api['create_time']);?>
+                    </div>
+                </div><?php endif; endforeach; endif; else: echo "" ;endif; ?>
+    <?php if($apiNum == 0): ?><div class="alert alert-danger" role="alert">
+            暂无数据
+        </div><?php endif; ?>
 
 
 

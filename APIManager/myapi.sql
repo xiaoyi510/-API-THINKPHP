@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2016-11-08 15:34:10
+Date: 2016-11-17 08:40:21
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -36,12 +36,12 @@ CREATE TABLE `api` (
   `uid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
   `is_login` tinyint(1) unsigned DEFAULT '0' COMMENT '是否只有登录才能看 0 否 1 开',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of api
 -- ----------------------------
-INSERT INTO `api` VALUES ('7', '15036510', '1', '测试', '[]', '[]', '2', '1', 'http://wx.k1jia.com', '哦i接按时购I爱上偶家收购就', 'url:http://wx.k1jia.com\r\ndata:\r\n{\r\n	timestamp:123456\r\n}\r\n\r\n\r\nasogija s', '{\r\n  error_code:0,\r\n  msg:\'aaa\'\r\n}\r\n\r\nasgjaisgo ', '1478583569', '1', '1');
+INSERT INTO `api` VALUES ('8', '0', '3', '用户登录', '[{\"paramName\":\"timestamp\",\"paramType\":\"Int\",\"paramMust\":\"1\",\"paramDefault\":\"\",\"paramText\":\"10\\u4f4d\\u65f6\\u95f4\\u6233\"},{\"paramName\":\"username\",\"paramType\":\"String\",\"paramMust\":\"1\",\"paramDefault\":\"\",\"paramText\":\"\\u7528\\u6237\\u540d\"},{\"paramName\":\"password\",\"paramType\":\"String\",\"paramMust\":\"1\",\"paramDefault\":\"\",\"paramText\":\"\\u5bc6\\u7801\"},{\"paramName\":\"sign\",\"paramType\":\"String\",\"paramMust\":\"1\",\"paramDefault\":\"\",\"paramText\":\"\\u8bbf\\u95ee\\u5bc6\\u94a5\"}]', '[{\"returnName\":\"error_code\",\"returnType\":\"String\",\"returnText\":\"\\u9519\\u8bef\\u4ee3\\u7801\"},{\"returnName\":\"msg\",\"returnType\":\"String\",\"returnText\":\"\\u8fd4\\u56de\\u4fe1\\u606f\"}]', '2', '1', 'http://wx.k1jia.com', '用户登录接口', '请求地址:http://wx.k1jia.com?timestamp=0&amp;username=admin&amp;password=admin&amp;sign=a\r\n', '{\r\n  error_code:0,\r\n  msg:\'登录成功\'\r\n}', '1478592656', '1', '1');
 INSERT INTO `api` VALUES ('6', '001', '1', '用户登录', '[{\"paramName\":\"timestamp\",\"paramType\":\"String\",\"paramMust\":\"1\",\"paramDefault\":\"\",\"paramText\":\"\\u65f6\\u95f4\\u6233\"}]', '[{\"returnName\":\"asf\",\"returnType\":\"String\",\"returnText\":\"asg\"}]', '1', '1', 'http://wx.k1jia.com', '用户登录', 'function a(){\r\n  echo 1;\r\n}', '返回示例', '1478581586', '1', '0');
 
 -- ----------------------------
@@ -54,13 +54,12 @@ CREATE TABLE `cate` (
   `desc` text COMMENT '描述',
   `create_time` int(11) unsigned DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of cate
 -- ----------------------------
-INSERT INTO `cate` VALUES ('1', '测试', '飞里', '0');
-INSERT INTO `cate` VALUES ('2', '用户', '用户登录、注册等', '1478519437');
+INSERT INTO `cate` VALUES ('3', '用户管理', '', '1478592459');
 
 -- ----------------------------
 -- Table structure for system

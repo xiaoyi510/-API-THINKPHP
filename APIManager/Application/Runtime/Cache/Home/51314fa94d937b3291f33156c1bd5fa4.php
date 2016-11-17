@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>API管理</title>
-
+    <title><?php echo ($systemInfo["web_title"]); ?></title>
+    <link rel="shortcut icon" href="/favicon.ico" mce_href="/favicon.ico" type="image/x-icon">
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="/Public/js/jquery-1.11.2.min.js"></script>
     <!-- Bootstrap -->
@@ -13,6 +13,11 @@
     <link href="/Public/css/my.css" rel="stylesheet">
     <!--font-awesome字体库-->
     <link href="/Public/css/font-awesome.min.css" rel="stylesheet"/>
+    <!--layer-->
+    <link href="/Public/js/layer/skin/layer.css" rel="stylesheet"/>
+    <script src="/Public/js/layer/layer.js" type="text/javascript"></script>
+
+
 
 
     <!--主要写的jquery拓展方法-->
@@ -92,7 +97,7 @@
                                         <a href="<?php echo U('System/index');?>">系统设置</a>
                                     </li>
                                     <li>
-                                        <a href="<?php echo U('User/manager');?>">用户管理</a>
+                                        <a href="<?php echo U('User/index');?>">用户管理</a>
                                     </li>
                                 </ul>
                             </li><?php endif; ?>
@@ -104,33 +109,36 @@
         <!--导航条内容-->
     </div>
     <!--导航条-->
-    <div class="container-full" style="margin-left: 250px;position: absolute;top: 0px;width: 100%;">
-        <!--右侧-->
-        <div class="main">
-            <!--右侧顶部-->
-            <div class="header">
-                <div class="left">
 
 
-                    <ol class="breadcrumb">
-                        
+</div>
+<div class="container-full" style="margin-left: 250px;position: absolute;top: 0px;width: calc(100% - 250px);">
+    <!--右侧-->
+    <div class="main">
+        <!--右侧顶部-->
+        <div class="header">
+            <div class="left">
+
+
+                <ol class="breadcrumb">
+                    
     <li><a href="<?php echo U('Index/index');?>">首页</a></li>
-    <li class="active">添加分类</li>
+    <li class="active">添加用户</li>
 
-                    </ol>
+                </ol>
 
 
-                </div>
-                <div class="right">
-                    <?php if($isLogin): ?><span style="color: white;">欢迎回来，<?php echo ($userInfo['name']); ?> </span><a href="<?php echo U('User/repass');?>">修改密码</a> <a href="<?php echo U('Login/logout');?>">退出</a>
-                        <?php else: ?>
-                        <a href="<?php echo U('Login/login');?>">登录</a><?php endif; ?>
-                </div>
             </div>
-            <!--右侧顶部-->
-            <!--右侧内容-->
-            <div class="right_content container">
-                
+            <div class="right">
+                <?php if($isLogin): ?><span style="color: white;">欢迎回来，<?php echo ($userInfo['name']); ?> </span><a href="<?php echo U('User/repass');?>">修改密码</a> <a href="<?php echo U('Login/logout');?>">退出</a>
+                    <?php else: ?>
+                    <a href="<?php echo U('Login/login');?>">登录</a><?php endif; ?>
+            </div>
+        </div>
+        <!--右侧顶部-->
+        <!--右侧内容-->
+        <div class="right_content container">
+            
     <form action="<?php echo U();?>" method="post" class="form">
         <div class="form-group">
             <label>账号</label>
@@ -163,15 +171,13 @@
     </form>
 
 
-            </div>
-            <!--右侧内容-->
         </div>
-        <!--右侧-->
-
+        <!--右侧内容-->
     </div>
-
+    <!--右侧-->
 
 </div>
+
 <script>
     $(function () {
         $('#menu').metisMenu();

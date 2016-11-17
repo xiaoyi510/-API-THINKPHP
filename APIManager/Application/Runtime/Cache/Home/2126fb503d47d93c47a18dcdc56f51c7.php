@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo ($systemInfo["web_title"]); ?></title>
-
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/gif" />
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="/Public/js/jquery-1.11.2.min.js"></script>
     <!-- Bootstrap -->
@@ -67,8 +68,20 @@
     </li>
 
     <?php if($isSuper >= 1): ?><li>
-            <a href="<?php echo U('Api/index',['cid'=>I('get.cid')]);?>">接口列表</a>
+            <a href="<?php echo U('Api/add',['cid'=>I('get.cid')]);?>">天假接口</a>
         </li><?php endif; ?>
+    <a href="#" aria-expanded="true">
+        <span class="sidebar-nav-item-icon fa fa-github fa-lg"></span>
+        <span class="sidebar-nav-item">API列表</span>
+        <span class="fa arrow"></span>
+    </a>
+    <ul aria-expanded="true">
+        <?php if(is_array($apiList)): $i = 0; $__LIST__ = $apiList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$api): $mod = ($i % 2 );++$i;?><li>
+                <a href="#TrueCode_api_<?php echo md5($api['id']);?>">
+                    <?php echo ($api["name"]); ?>
+                </a>
+            </li><?php endforeach; endif; else: echo "" ;endif; ?>
+    </ul>
 
 
                 </ul>
@@ -195,12 +208,16 @@
         </div>
         <div class="form-group">
             <label>返回数据(JSON)</label>
-            <div class="input-group">
-                <button type="button" class="btn btn-success " id="returnParam">添加参数</button>
-                <select name="return_type" class="form-control">
-                    <option value="1" selected="selected">JSON</option>
-                    <option value="2">XML</option>
-                </select>
+            <div class="row">
+                <div class="col-sm-1">
+                    <button type="button" class="btn btn-success" id="returnParam">添加参数</button>
+                </div>
+                <div class="col-sm-2">
+                    <select name="return_type" class="form-control">
+                        <option value="1" <?php echo $info['return_type']==1?'selected="selected"':'';?>>JSON</option>
+                        <option value="2" <?php echo $info['return_type']==2?'selected="selected"':'';?>>XML</option>
+                    </select>
+                </div>
             </div>
             <hr>
 

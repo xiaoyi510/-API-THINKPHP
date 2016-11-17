@@ -259,4 +259,41 @@
             }
         }
 
+        /**
+         * 基础删除方法 根据id 删除数据
+         * @param $id
+         */
+        public function remove($id)
+        {
+            //处理id
+            $id = intval($id);
+
+            //判断Id 是否合法
+            if (!$id) {
+                $this->error("数据未找到");
+                exit;
+            }
+
+            //实例化模型
+            $model = D(CONTROLLER_NAME);
+
+            //查找是否存在
+            $data = $model->find($id);
+            if (!$data) {
+                $this->error("数据未找到");
+                exit;
+            }
+            //开始删除
+            $rst = $model->delete($id);
+
+            //判断是否删除成功
+            if (!$rst) {
+                $this->error('删除信息失败');
+                exit;
+            }
+            //删除成功 跳转到列表
+            $this->redirect(U('index',['cid'=>$data['cid']]));
+            exit;
+        }
+
     }

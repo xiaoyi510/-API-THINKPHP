@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo ($systemInfo["web_title"]); ?></title>
-
+    <link rel="shortcut icon" href="/favicon.ico" mce_href="/favicon.ico" type="image/x-icon">
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="/Public/js/jquery-1.11.2.min.js"></script>
     <!-- Bootstrap -->

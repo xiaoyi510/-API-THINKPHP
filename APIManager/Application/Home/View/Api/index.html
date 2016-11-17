@@ -17,85 +17,190 @@
         </a>
         <ul aria-expanded="true">
             <volist name="apiList" id="api">
-                <li>
-                    <a href="#TrueCode_api_{:md5($api['id'])}">
-                        {$api.name}
-                    </a>
-                </li>
+                {~$apiNum = 0}
+                <if condition="$api['is_login']">
+                    <if condition="$isLogin">
+                        {~++$apiNum}
+                        <li>
+                            <a href="#TrueCode_api_{:md5($api['id'])}">
+                                {$api.name}
+                            </a>
+                        </li>
+                    </if>
+                    <else />
+                    {~++$apiNum}
+                    <li>
+                        <a href="#TrueCode_api_{:md5($api['id'])}">
+                            {$api.name}
+                        </a>
+                    </li>
+                </if>
+
+
+
             </volist>
+            <if condition="$apiNum == 0">
+                <li >
+                    <a href="">暂无数据</a>
+                </li>
+            </if>
         </ul>
     </li>
 </block>
 
 <block name="content">
+    {~$apiNum = 0}
     <volist name="apiList" id="api">
-        <div class="panel panel-success" id="TrueCode_api_{:md5($api['id'])}">
-            <div class="panel-heading">
-                <h3 class="panel-title">{$api.name}</h3>
-                <if condition="$isSuper egt 1">
-                    <a href="{:U('edit',['id'=>$api['id']])}" class="btn btn-success" style="float: right;margin-top: -26px;">编辑</a>
+        <if condition="$api['is_login']">
+                <if condition="$isLogin">
+                    {~++$apiNum}
+                    {// 登录状态下的}
+                    <div class="panel panel-success" id="TrueCode_api_{:md5($api['id'])}">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{$api.name}</h3>
+                            <if condition="$isSuper egt 1">
+                                <a href="{:U('edit',['id'=>$api['id']])}" class="btn btn-success" style="float: right;margin-top: -26px;">编辑</a>
+                                <a href="{:U('remove',['id'=>$api['id']])}" class="btn btn-danger" style="float: right;margin-top: -26px;margin-right: 10px">删除</a>
+                            </if>
+                        </div>
+                        <div class="panel-body">
+                            <span class="label label-success">{:$api['type']==1?'POST':'GET'}</span> - <span
+                                class="label label-success">{$api.url}</span>
+                            <hr />
+                            <p>接口功能：<br/>{$api.desc}</p>
+                            <hr />
+                            <h4>请求参数(urlParams)</h4>
+                            <table class="table table-condensed table-hover table-responsive table-bordered">
+                                <thead>
+                                <tr>
+                                    <td>参数名</td>
+                                    <td>类型</td>
+                                    <td>是否必填</td>
+                                    <td>默认值</td>
+                                    <td>说明</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {~$linJson = json_decode($api['params'])}
+                                <volist name="linJson" id="lin">
+                                    <tr {:$lin->paramMust?'class="text-danger"':''}>
+                                        <td>{$lin->paramName}</td>
+                                        <td>{$lin->paramType}</td>
+                                        <td>{:$lin->paramMust?'必填':'可选'}</td>
+                                        <td>{:$lin->paramDefault?$lin->paramDefault:'-'}</td>
+                                        <td>{$lin->paramText}</td>
+                                    </tr>
+                                </volist>
+                                </tbody>
+                            </table>
+                            <h4>返回字段(类型：{:$api['return_type']==1?'JSON':'XML'})</h4>
+                            <table class="table table-condensed table-hover table-responsive table-bordered">
+                                <thead>
+                                <tr>
+                                    <td>字段名</td>
+                                    <td>字段类型</td>
+                                    <td>说明</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {~$linJson = json_decode($api['returns'])}
+                                <volist name="linJson" id="lin">
+                                    <tr>
+                                        <td>{$lin->returnName}</td>
+                                        <td>{$lin->returnType}</td>
+                                        <td>{$lin->returnText}</td>
+                                    </tr>
+                                </volist>
+                                </tbody>
+                            </table>
+                            <h4>接口示例</h4>
+                            <pre class="prettyprint linenums">{$api.demo}</pre>
+                            <h4>返回示例</h4>
+                            <pre class="prettyprint linenums">{$api.return_demo}</pre>
+                        </div>
+                        <div class="panel-footer">
+                            创建时间：{:date('Y-m-d H:i:s',$api['create_time'])}
+                        </div>
+                    </div>
                 </if>
-            </div>
-            <div class="panel-body">
-                <span class="label label-success">{:$api['type']==1?'POST':'GET'}</span> - <span
-                    class="label label-success">{$api.url}</span>
-                <hr />
-                <p>接口功能：<br/>{$api.desc}</p>
-                <hr />
-                <h4>请求参数(urlParams)</h4>
-                <table class="table table-condensed table-hover table-responsive table-bordered">
-                    <thead>
-                        <tr>
-                            <td>参数名</td>
-                            <td>类型</td>
-                            <td>是否必填</td>
-                            <td>默认值</td>
-                            <td>说明</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {~$linJson = json_decode($api['params'])}
-                        <volist name="linJson" id="lin">
-                            <tr {:$lin->paramMust?'class="text-danger"':''}>
-                                <td>{$lin->paramName}</td>
-                                <td>{$lin->paramType}</td>
-                                <td>{:$lin->paramMust?'必填':'可选'}</td>
-                                <td>{:$lin->paramDefault?$lin->paramDefault:'-'}</td>
-                                <td>{$lin->paramText}</td>
-                            </tr>
-                        </volist>
-                    </tbody>
-                </table>
-                <h4>返回字段(类型：{:$api['return_type']==1?'JSON':'XML'})</h4>
-                <table class="table table-condensed table-hover table-responsive table-bordered">
-                    <thead>
-                        <tr>
-                            <td>字段名</td>
-                            <td>字段类型</td>
-                            <td>说明</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {~$linJson = json_decode($api['returns'])}
-                        <volist name="linJson" id="lin">
+            <else />
+                {~++$apiNum}
+                {// 不需要登录的}
+                <div class="panel panel-success" id="TrueCode_api_{:md5($api['id'])}">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{$api.name}</h3>
+                        <if condition="$isSuper egt 1">
+                            <a href="{:U('edit',['id'=>$api['id']])}" class="btn btn-success" style="float: right;margin-top: -26px;">编辑</a>
+                            <a href="{:U('remove',['id'=>$api['id']])}" class="btn btn-danger" style="float: right;margin-top: -26px;margin-right: 10px">删除</a>
+                        </if>
+                    </div>
+                    <div class="panel-body">
+                        <span class="label label-success">{:$api['type']==1?'POST':'GET'}</span> - <span
+                            class="label label-success">{$api.url}</span>
+                        <hr />
+                        <p>接口功能：<br/>{$api.desc}</p>
+                        <hr />
+                        <h4>请求参数(urlParams)</h4>
+                        <table class="table table-condensed table-hover table-responsive table-bordered">
+                            <thead>
                             <tr>
-                                <td>{$lin->returnName}</td>
-                                <td>{$lin->returnType}</td>
-                                <td>{$lin->returnText}</td>
+                                <td>参数名</td>
+                                <td>类型</td>
+                                <td>是否必填</td>
+                                <td>默认值</td>
+                                <td>说明</td>
                             </tr>
-                        </volist>
-                    </tbody>
-                </table>
-                <h4>接口示例</h4>
-                <pre class="prettyprint linenums">{$api.demo}</pre>
-                <h4>返回示例</h4>
-                <pre class="prettyprint linenums">{$api.return_demo}</pre>
-            </div>
-            <div class="panel-footer">
-                创建时间：{:date('Y-m-d H:i:s',$api['create_time'])}
-            </div>
-        </div>
+                            </thead>
+                            <tbody>
+                            {~$linJson = json_decode($api['params'])}
+                            <volist name="linJson" id="lin">
+                                <tr {:$lin->paramMust?'class="text-danger"':''}>
+                                    <td>{$lin->paramName}</td>
+                                    <td>{$lin->paramType}</td>
+                                    <td>{:$lin->paramMust?'必填':'可选'}</td>
+                                    <td>{:$lin->paramDefault?$lin->paramDefault:'-'}</td>
+                                    <td>{$lin->paramText}</td>
+                                </tr>
+                            </volist>
+                            </tbody>
+                        </table>
+                        <h4>返回字段(类型：{:$api['return_type']==1?'JSON':'XML'})</h4>
+                        <table class="table table-condensed table-hover table-responsive table-bordered">
+                            <thead>
+                            <tr>
+                                <td>字段名</td>
+                                <td>字段类型</td>
+                                <td>说明</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {~$linJson = json_decode($api['returns'])}
+                            <volist name="linJson" id="lin">
+                                <tr>
+                                    <td>{$lin->returnName}</td>
+                                    <td>{$lin->returnType}</td>
+                                    <td>{$lin->returnText}</td>
+                                </tr>
+                            </volist>
+                            </tbody>
+                        </table>
+                        <h4>接口示例</h4>
+                        <pre class="prettyprint linenums">{$api.demo}</pre>
+                        <h4>返回示例</h4>
+                        <pre class="prettyprint linenums">{$api.return_demo}</pre>
+                    </div>
+                    <div class="panel-footer">
+                        创建时间：{:date('Y-m-d H:i:s',$api['create_time'])}
+                    </div>
+                </div>
+        </if>
+
     </volist>
+    <if condition="$apiNum == 0">
+        <div class="alert alert-danger" role="alert">
+            暂无数据
+        </div>
+    </if>
 
 
 </block>

@@ -6,9 +6,23 @@
 
     <if condition="$isSuper egt 1">
         <li>
-            <a href="{:U('Api/index',['cid'=>I('get.cid')])}">接口列表</a>
+            <a href="{:U('Api/add',['cid'=>I('get.cid')])}">添加接口</a>
         </li>
     </if>
+    <a href="#" aria-expanded="true">
+        <span class="sidebar-nav-item-icon fa fa-github fa-lg"></span>
+        <span class="sidebar-nav-item">API列表</span>
+        <span class="fa arrow"></span>
+    </a>
+    <ul aria-expanded="true">
+        <volist name="apiList" id="api">
+            <li>
+                <a href="#TrueCode_api_{:md5($api['id'])}">
+                    {$api.name}
+                </a>
+            </li>
+        </volist>
+    </ul>
 </block>
 
 <block name="css">
@@ -147,13 +161,19 @@
         </div>
         <div class="form-group">
             <label>返回数据(JSON)</label>
-            <div class="input-group">
-                <button type="button" class="btn btn-success " id="returnParam">添加参数</button>
-                <select name="return_type" class="form-control">
-                    <option value="1" {:$info['return_type']==1?'selected="selected"':''}>JSON</option>
-                    <option value="2" {:$info['return_type']==2?'selected="selected"':''}>XML</option>
-                </select>
+            <div class="row">
+                <div class="col-sm-1">
+                    <button type="button" class="btn btn-success" id="returnParam">添加参数</button>
+                </div>
+                <div class="col-sm-2">
+                    <select name="return_type" class="form-control">
+                        <option value="1" {:$info['return_type']==1?'selected="selected"':''}>JSON</option>
+                        <option value="2" {:$info['return_type']==2?'selected="selected"':''}>XML</option>
+                    </select>
+                </div>
             </div>
+        </div>
+        <div class="form-group">
             <hr>
 
             <script>
